@@ -24,8 +24,10 @@ export async function GET(_: NextRequest, { params }: { params: Promise<{ id: st
       createdAt: doc.data()?.createdAt?.toDate().toISOString(),
       updatedAt: doc.data()?.updatedAt?.toDate().toISOString(),
     });
-  } catch {
-    return NextResponse.json({ error: "Failed to fetch press release" }, { status: 500 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[press GET]", msg);
+    return NextResponse.json({ error: "Failed to fetch press release", detail: msg }, { status: 500 });
   }
 }
 
@@ -41,8 +43,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       updatedAt: FieldValue.serverTimestamp(),
     });
     return NextResponse.json({ success: true });
-  } catch {
-    return NextResponse.json({ error: "Failed to update press release" }, { status: 500 });
+  } catch (err) {
+    const msg = err instanceof Error ? err.message : String(err);
+    console.error("[press PUT]", msg);
+    return NextResponse.json({ error: "Failed to update press release", detail: msg }, { status: 500 });
   }
 }
 
